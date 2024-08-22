@@ -2,26 +2,42 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSort } from "../redux/slices/filterSlice";
 
+export const popup = [
+  { name: "рейтингу(убыв)", sortProperty: "rating" },
+  { name: "рейтингу(возр)", sortProperty: "-rating" },
+  { name: "цене(убыв)", sortProperty: "price" },
+  { name: "цене(возр)", sortProperty: "-price" },
+  { name: "алфавиту(убыв)", sortProperty: "title" },
+  { name: "алфавиту(возр)", sortProperty: "-title" },
+];
+
 function Sort() {
   const sortValue = useSelector((state) => state.filterReducer.sort);
-  const dispatch = useDispatch();
   const [visiblePopup, setVisiblePopup] = React.useState(false);
-  const popup = [
-    { name: "рейтингу(убыв)", sortProperty: "rating" },
-    { name: "рейтингу(возр)", sortProperty: "-rating" },
-    { name: "цене(убыв)", sortProperty: "price" },
-    { name: "цене(возр)", sortProperty: "-price" },
-    { name: "алфавиту(убыв)", sortProperty: "title" },
-    { name: "алфавиту(возр)", sortProperty: "-title" },
-  ];
+  const sortRef = React.useRef();
+  const dispatch = useDispatch();
 
   const SetPopupList = (obj) => {
     dispatch(setSort(obj));
     setVisiblePopup(false);
   };
 
+  React.useEffect(() => {
+    const handlerEventListener = (event) => {
+      if (!event.composedPath().includes(sortRef.current)) {
+        setVisiblePopup(false);
+      }
+    };
+    document.body.addEventListener("click", handlerEventListener);
+
+    // Удаляю слушатель события в тот момент, когда ухожу с этой страницы (пофикшен баг с размножениеем слушателей события)
+    return () => {
+      document.body.removeEventListener("click", handlerEventListener);
+    };
+  }, []);
+
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"

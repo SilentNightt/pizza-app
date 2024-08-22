@@ -8,6 +8,7 @@ import axios from "axios";
 import { AppContext } from "../App";
 import { useSelector, useDispatch } from "react-redux";
 import { setCategoryId, setCurrentPage } from "../redux/slices/filterSlice";
+import { setItems } from "../redux/slices/pizzasSlice";
 
 function Home() {
   const categoriesId = useSelector((state) => state.filterReducer.CategoriesId);
@@ -15,10 +16,10 @@ function Home() {
   const sortType = useSelector(
     (state) => state.filterReducer.sort.sortProperty
   );
+  let items = useSelector((state) => state.pizzasReducer.items);
 
   const dispatch = useDispatch();
   const { searchValue } = React.useContext(AppContext);
-  const [items, setItems] = React.useState([]);
   const [skeletonLoading, setSkeletonLoading] = React.useState(true);
 
   const onChangeCategory = (id) => {
@@ -29,22 +30,29 @@ function Home() {
     dispatch(setCurrentPage(number));
   };
 
-  React.useEffect(() => {
+  const fetchPizza = async () => {
     setSkeletonLoading(true);
 
     const category = categoriesId !== 0 ? `category=${categoriesId}` : "";
     const sortBy = sortType.replace("-", "");
     const sortDirect = sortType.includes("-") ? "asc" : "desc";
 
-    axios
-      .get(
+    try {
+      // Асинхронный запрос на бэкэнд
+      const { data } = await axios.get(
         `https://669bb279276e45187d3636c3.mockapi.io/items?page=${CurrentPage}&limit=4&${category}&sortBy=${sortBy}&order=${sortDirect}`
-      )
-      .then((response) => {
-        setItems(response.data);
-        setSkeletonLoading(false);
-      });
+      );
+      dispatch(setItems(data));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSkeletonLoading(false);
+    }
+
     window.scrollTo(0, 0);
+  };
+  React.useEffect(() => {
+    fetchPizza();
   }, [categoriesId, sortType, CurrentPage]);
 
   const pizzas = items
