@@ -1,15 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addProduct } from "../../redux/slices/cartSlice";
+import { addProduct, selectCartItemById } from "../../redux/slices/cartSlice";
 
 const pizzaType = ["традиционная", "тонкая"];
 
 function PizzaBlock({ id, price, title, imageUrl, sizes, types }) {
   const dispatch = useDispatch();
   // Из всего массива корзины вытаскиваем count, если он есть и рендерим его
-  const cartItem = useSelector((state) =>
-    state.cartReducer.items?.find((obj) => obj.id === id)
-  );
+  const cartItem = useSelector(selectCartItemById(id));
   const [valueType, setValueType] = React.useState(0);
   const [valueSize, setValueSize] = React.useState(0);
 
