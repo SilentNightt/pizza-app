@@ -1,11 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  clearProduct,
-  selectCart,
-  selectTotalPrice,
-} from "../redux/slices/cartSlice";
+import { clearProduct, selectCart } from "../redux/slices/cartSlice";
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
 
@@ -14,7 +10,6 @@ function Cart() {
   // Из всего массива корзины вытаскиваем count, если он есть и рендерим его
   const { totalPrice, items } = useSelector(selectCart);
   const totalItemsCount = items.reduce((sum, item) => sum + item.count, 0);
-  const priceAll = useSelector(selectTotalPrice);
 
   const onClearItem = () => {
     if (window.confirm("Очистить корзину?")) {
