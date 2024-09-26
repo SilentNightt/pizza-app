@@ -16,7 +16,7 @@ export const popup: SortItem[] = [
   { name: "алфавиту(возр)", sortProperty: "-title" },
 ];
 
-function Sort() {
+const Sort: React.FC = () => {
   const dispatch = useDispatch();
   const sortValue = useSelector((state: any) => state.filterReducer.sort);
   const sortRef = React.useRef<HTMLDivElement>(null);
@@ -30,8 +30,12 @@ function Sort() {
   };
 
   React.useEffect(() => {
-    const handlerEventListener = (event: any) => {
-      if (!event.composedPath().includes(sortRef.current)) {
+    const handlerEventListener = (event: MouseEvent) => {
+      // Переопределяю тип переменной для исключения ошибки в handlerEventListener
+      const _event = event as MouseEvent & {
+          composedPath: () => EventTarget[];
+      }
+      if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
         setVisiblePopup(false);
       }
     };
