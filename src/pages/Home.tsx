@@ -16,21 +16,21 @@ import {
 } from "../redux/slices/filterSlice";
 import { fetchPizzaz } from "../redux/slices/pizzasSlice";
 
-function Home() {
+const Home: React.FC = () => {
   const categoriesId = useSelector(selectCategoriesId);
   const CurrentPage = useSelector(selectCurrentPage);
   const sortType = useSelector(selectSortProprty);
   const searchValue = useSelector(selectSearchValue);
-  let { items, status } = useSelector((state) => state.pizzasReducer);
+  let { items, status } = useSelector((state: any) => state.pizzasReducer);
 
   const dispatch = useDispatch();
 
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = (number) => {
-    dispatch(setCurrentPage(number));
+  const onChangePage = (page: number) => {
+    dispatch(setCurrentPage(page));
   };
 
   const getPizza = async () => {
@@ -39,6 +39,7 @@ function Home() {
     const sortDirect = sortType.includes("-") ? "asc" : "desc";
 
     dispatch(
+      // @ts-ignore
       fetchPizzaz({
         category,
         sortBy,
@@ -54,10 +55,10 @@ function Home() {
   }, [categoriesId, sortType, CurrentPage]);
 
   const pizzas = items
-    .filter((obj) => {
+    .filter((obj: any) => {
       return obj.title.toLowerCase().includes(searchValue.toLowerCase());
     })
-    .map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+    .map((obj: any) => <PizzaBlock key={obj.id} {...obj} />);
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (

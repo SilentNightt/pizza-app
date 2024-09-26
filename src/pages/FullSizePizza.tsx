@@ -2,8 +2,12 @@ import axios from "axios";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-function FullSizePizza() {
-  const [pizza, setPizza] = React.useState();
+const FullSizePizza : React.FC = () => {
+  const [pizza , setPizza] = React.useState<{
+    title: string;
+    imageUrl: string;
+    price: number;
+  }>();
   const navigate = useNavigate();
   const { id } = useParams();
 

@@ -5,7 +5,16 @@ import { Link } from "react-router-dom";
 
 const pizzaType = ["традиционная", "тонкая"];
 
-function PizzaBlock({ id, price, title, imageUrl, sizes, types }) {
+type PizzaBlockProps = {
+  id: string; 
+  price: number; 
+  title: string;
+  imageUrl: string; 
+  types: number[];
+  sizes: number[];
+}
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, price, title, imageUrl, sizes, types }) => {
   const dispatch = useDispatch();
   // Из всего массива корзины вытаскиваем count, если он есть и рендерим его
   const cartItem = useSelector(selectCartItemById(id));

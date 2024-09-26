@@ -2,7 +2,12 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSort } from "../redux/slices/filterSlice";
 
-export const popup = [
+type SortItem = {
+  name: string;
+  sortProperty: string;
+}
+
+export const popup: SortItem[] = [
   { name: "рейтингу(убыв)", sortProperty: "rating" },
   { name: "рейтингу(возр)", sortProperty: "-rating" },
   { name: "цене(убыв)", sortProperty: "price" },
@@ -12,18 +17,20 @@ export const popup = [
 ];
 
 function Sort() {
-  const sortValue = useSelector((state) => state.filterReducer.sort);
-  const [visiblePopup, setVisiblePopup] = React.useState(false);
-  const sortRef = React.useRef();
   const dispatch = useDispatch();
+  const sortValue = useSelector((state: any) => state.filterReducer.sort);
+  const sortRef = React.useRef<HTMLDivElement>(null);
 
-  const SetPopupList = (obj) => {
+
+  const [visiblePopup, setVisiblePopup] = React.useState(false);
+
+  const SetPopupList = (obj: SortItem) => {
     dispatch(setSort(obj));
     setVisiblePopup(false);
   };
 
   React.useEffect(() => {
-    const handlerEventListener = (event) => {
+    const handlerEventListener = (event: any) => {
       if (!event.composedPath().includes(sortRef.current)) {
         setVisiblePopup(false);
       }
