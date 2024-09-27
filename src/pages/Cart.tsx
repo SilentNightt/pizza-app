@@ -4,16 +4,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearProduct, selectCart } from "../redux/slices/cartSlice";
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
+import { useAppDispatch } from "../redux/store";
 
 const Cart: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   // Из всего массива корзины вытаскиваем count, если он есть и рендерим его
   const { totalPrice, items } = useSelector(selectCart);
   const totalItemsCount = items.reduce((sum: number, item: any) => sum + item.count, 0);
 
   const onClearItem = () => {
     if (window.confirm("Очистить корзину?")) {
-      dispatch(clearProduct([]));
+      dispatch(clearProduct([] as any));
     }
   };
 

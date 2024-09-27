@@ -5,7 +5,7 @@ import PizzaBlock from "../components/PizzaBlock/Index";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   selectCategoriesId,
   selectCurrentPage,
@@ -15,19 +15,22 @@ import {
   setCurrentPage,
 } from "../redux/slices/filterSlice";
 import { fetchPizzaz } from "../redux/slices/pizzasSlice";
+import { useAppDispatch } from "../redux/store";
+
 
 const Home: React.FC = () => {
+
   const categoriesId = useSelector(selectCategoriesId);
   const CurrentPage = useSelector(selectCurrentPage);
   const sortType = useSelector(selectSortProprty);
   const searchValue = useSelector(selectSearchValue);
   let { items, status } = useSelector((state: any) => state.pizzasReducer);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const onChangeCategory = (id: number) => {
+  const onChangeCategory = React.useCallback((id: number) => {
     dispatch(setCategoryId(id));
-  };
+  }, []);
 
   const onChangePage = (page: number) => {
     dispatch(setCurrentPage(page));
@@ -39,17 +42,18 @@ const Home: React.FC = () => {
     const sortDirect = sortType.includes("-") ? "asc" : "desc";
 
     dispatch(
-      // @ts-ignore
       fetchPizzaz({
         category,
         sortBy,
         sortDirect,
-        CurrentPage,
+        CurrentPage: String(CurrentPage),
       })
     );
 
     window.scrollTo(0, 0);
   };
+
+  
   React.useEffect(() => {
     getPizza();
   }, [categoriesId, sortType, CurrentPage]);

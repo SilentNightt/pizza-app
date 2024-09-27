@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSort } from "../redux/slices/filterSlice";
+import { useAppDispatch } from "../redux/store";
 
 type SortItem = {
   name: string;
@@ -16,16 +17,18 @@ export const popup: SortItem[] = [
   { name: "алфавиту(возр)", sortProperty: "-title" },
 ];
 
-const Sort: React.FC = () => {
-  const dispatch = useDispatch();
+
+const Sort: React.FC = ( ) => {
+  const dispatch = useAppDispatch();
   const sortValue = useSelector((state: any) => state.filterReducer.sort);
   const sortRef = React.useRef<HTMLDivElement>(null);
+
 
 
   const [visiblePopup, setVisiblePopup] = React.useState(false);
 
   const SetPopupList = (obj: SortItem) => {
-    dispatch(setSort(obj));
+    dispatch(setSort(obj as any));
     setVisiblePopup(false);
   };
 
